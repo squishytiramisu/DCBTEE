@@ -1,7 +1,6 @@
 
 #pragma once
 
-
 #define MAX_VALUE_SIZE (1 << 16)
 
 #define OK "OK"

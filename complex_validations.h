@@ -6,15 +6,10 @@
 
 
 /*
-Validations:
- - id is valid
- - taj number is valid
- - name is not empty
- - name is not too long
- - name has no special characters
- - date of birth is valid
- - taj is not already registered
+This file contains complex, stateful validations for FPC events.
+The validatidations dont require any desciption, they are self-explanatory.
 */
+
 bool validPersonBorn(std::string id, std::string taj, std::string name, std::string birth_date, shim_ctx_ptr_t ctx);
 
 bool validIssueLifeInsurance(std::string id, std::string taj, std::string from, std::string to, int cost, int payment, shim_ctx_ptr_t ctx);

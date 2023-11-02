@@ -8,7 +8,8 @@
 
 
 /*
-    This file contains the function to create, read and update the state of the chaincode.
+    This file contains the function to create, read and update the state of a private data.
+    The state is stored in a json format, which is stored in the ledger privately.
 */
 
 person_t getPerson(std::string key,  shim_ctx_ptr_t ctx);

@@ -23,11 +23,11 @@
 */
 
 
-std::string elgamal_encrypt(BIGNUM * g, BIGNUM * g_hat, BIGNUM * q, BIGNUM * p, BIGNUM * y,
-   const std::string & m) {
+std::string elgamal_encrypt(BIGNUM * g, BIGNUM * g_hat,
+                           BIGNUM * q, BIGNUM * p,
+                           BIGNUM * y, const std::string & m) {
 
    BN_CTX * ctx = BN_CTX_new();
-
    BIGNUM * r = BN_new();
    BIGNUM * s = BN_new();
    BIGNUM * rG = BN_new();
@@ -50,23 +50,22 @@ std::string elgamal_encrypt(BIGNUM * g, BIGNUM * g_hat, BIGNUM * q, BIGNUM * p, 
    // Convert rG to a dec string
    std::string rG_dec = BN_bn2dec(rG);
 
-   // Hash the dec utf8  using SHA-256
-   const unsigned char * utf8_rG = reinterpret_cast <
-      const unsigned char * > (rG_dec.c_str());
+   // Hash the decimal utf8 number using SHA-256
+   const unsigned char * utf8_rG = reinterpret_cast <const unsigned char * > (rG_dec.c_str());
+
    unsigned char hash[SHA256_DIGEST_LENGTH];
    SHA256((const unsigned char * ) utf8_rG, rG_dec.length(), hash);
    BN_bin2bn(hash, SHA256_DIGEST_LENGTH, h);
 
-   // COMPUTE M HEX
+   // Compute M HEX
    std::string m_hex;
    for (char c: m) {
       m_hex += intToHex((int) c);
    }
-   // END COMPUTE M HEX
 
    std::string hashHex = BN_bn2hex(h);
 
-   // SECTION COMPUTE C
+   // Compute C
    BIGNUM * m_bn = BN_new();
    BIGNUM * h_bn = BN_new();
    BN_hex2bn( & m_bn, m_hex.c_str());
@@ -85,6 +84,8 @@ std::string elgamal_encrypt(BIGNUM * g, BIGNUM * g_hat, BIGNUM * q, BIGNUM * p, 
    }
    // Convert the result back to a BIGNUM
    BIGNUM * result_bn = BN_bin2bn(result_bin, max_len, nullptr);
+
+   
    // Convert the result back to a hexadecimal string
    char * resultHex = BN_bn2hex(result_bn);
 
@@ -97,7 +98,6 @@ std::string elgamal_encrypt(BIGNUM * g, BIGNUM * g_hat, BIGNUM * q, BIGNUM * p, 
 
    OPENSSL_free(resultHex);
    BN_free(result_bn);
-   // END SECTION COMPUTE C
 
    // Calculate u = g^r mod p
    BN_mod_exp(u, g, r, p, ctx);

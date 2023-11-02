@@ -1,14 +1,20 @@
 
 #include "CR_functions.h"
 
+/*
+    This file contains the function to create, read and update the state of a private data.
+    The state is stored in a json format, which is stored in the ledger privately.
+*/
+
 
 person_t getPerson(std::string key,  shim_ctx_ptr_t ctx)
 {
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 
     get_state(DATAMAP_KEY, datamap_bytes, sizeof(datamap_bytes), &datamap_bytes_len, ctx);
-
+    
     if (datamap_bytes_len == 0)
     {
         LOG_DEBUG("datamapCC: datamap does not exist");
@@ -16,7 +22,7 @@ person_t getPerson(std::string key,  shim_ctx_ptr_t ctx)
         return person;
     }
 
-    // get datamap datamap from json
+    // get datamap from json
     data_map_t the_datamap;
     unmarshal_data_map(&the_datamap, (const char*)datamap_bytes, datamap_bytes_len);
     
@@ -32,7 +38,7 @@ person_t getPerson(std::string key,  shim_ctx_ptr_t ctx)
 
 health_examination_t getHealthExamination(std::string id, shim_ctx_ptr_t ctx)
 {
-    // check if datamap exists
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 
@@ -45,7 +51,7 @@ health_examination_t getHealthExamination(std::string id, shim_ctx_ptr_t ctx)
         return health_examination;
     }
 
-    // get datamap datamap from json
+    // get datamap from json
     data_map_t the_datamap;
     unmarshal_data_map(&the_datamap, (const char*)datamap_bytes, datamap_bytes_len);
     
@@ -61,7 +67,7 @@ health_examination_t getHealthExamination(std::string id, shim_ctx_ptr_t ctx)
 
 life_insurance_t getLifeInsurance(std::string id, shim_ctx_ptr_t ctx)
 {
-    // check if datamap exists
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 
@@ -74,7 +80,7 @@ life_insurance_t getLifeInsurance(std::string id, shim_ctx_ptr_t ctx)
         return life_insurance;
     }
 
-    // get datamap datamap from json
+    // get datamap from json
     data_map_t the_datamap;
     unmarshal_data_map(&the_datamap, (const char*)datamap_bytes, datamap_bytes_len);
     
@@ -91,7 +97,7 @@ life_insurance_t getLifeInsurance(std::string id, shim_ctx_ptr_t ctx)
 
 work_permit_t getWorkPermit(std::string id, shim_ctx_ptr_t ctx)
 {
-    // check if datamap exists
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 
@@ -121,7 +127,7 @@ work_permit_t getWorkPermit(std::string id, shim_ctx_ptr_t ctx)
 
 
 std::string putPerson(person_t person, shim_ctx_ptr_t ctx){
-    // check if datamap exists
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 
@@ -138,7 +144,8 @@ std::string putPerson(person_t person, shim_ctx_ptr_t ctx){
     data_map_t the_datamap;
     unmarshal_data_map(&the_datamap, (const char*)datamap_bytes, datamap_bytes_len);
     
-     // check if work_permit exists
+
+    // update or insert person
     if (the_datamap.persons.find(person.id) == the_datamap.persons.end())
     {
         the_datamap.persons.insert(std::pair<std::string, person_t>(person.id, person));
@@ -152,7 +159,7 @@ std::string putPerson(person_t person, shim_ctx_ptr_t ctx){
 }
 
 std::string putHealthExamination(health_examination_t health_examination, shim_ctx_ptr_t ctx){
-    // check if datamap exists
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 
@@ -170,6 +177,7 @@ std::string putHealthExamination(health_examination_t health_examination, shim_c
     data_map_t the_datamap;
     unmarshal_data_map(&the_datamap, (const char*)datamap_bytes, datamap_bytes_len);
     
+    // insert or update a health_examination
     the_datamap.health_examinations.insert(std::pair<std::string, health_examination_t>(health_examination.id, health_examination));
 
     std::string datamap_json = marshal_data_map(&the_datamap);
@@ -178,7 +186,7 @@ std::string putHealthExamination(health_examination_t health_examination, shim_c
 }
 
 std::string putLifeInsurance(life_insurance_t life_insurance, shim_ctx_ptr_t ctx){
-    // check if datamap exists
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 
@@ -196,6 +204,7 @@ std::string putLifeInsurance(life_insurance_t life_insurance, shim_ctx_ptr_t ctx
     data_map_t the_datamap;
     unmarshal_data_map(&the_datamap, (const char*)datamap_bytes, datamap_bytes_len);
     
+    // insert or update a life_insurance
     the_datamap.life_insurances.insert(std::pair<std::string, life_insurance_t>(life_insurance.id, life_insurance));
 
     std::string datamap_json = marshal_data_map(&the_datamap);
@@ -204,31 +213,32 @@ std::string putLifeInsurance(life_insurance_t life_insurance, shim_ctx_ptr_t ctx
 }
 
 std::string putWorkPermit(work_permit_t work_permit, shim_ctx_ptr_t ctx){
-    // check if datamap exists
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 
     get_state(DATAMAP_KEY, datamap_bytes, sizeof(datamap_bytes), &datamap_bytes_len, ctx);
-
     if (datamap_bytes_len == 0)
     {
         LOG_DEBUG("datamapCC: datamap does not exist");
         putDataMap(ctx);
     }
 
-    // get datamap datamap from json
+    // get datamap from json
     data_map_t the_datamap;
     unmarshal_data_map(&the_datamap, (const char*)datamap_bytes, datamap_bytes_len);
     
+    // insert or update a work_permit
     the_datamap.work_permits.insert(std::pair<std::string, work_permit_t>(work_permit.id, work_permit));
-
+    
+    //marshal datamap to json string and save new state
     std::string datamap_json = marshal_data_map(&the_datamap);
     put_state(DATAMAP_KEY, (uint8_t*)datamap_json.c_str(), datamap_json.length(), ctx);
     return OK;
 }
 
-std::string putDataMap(shim_ctx_ptr_t ctx){
 
+std::string putDataMap(shim_ctx_ptr_t ctx){
     data_map_t the_datamap;
     std::string datamap_json = marshal_data_map(&the_datamap);
     put_state(DATAMAP_KEY, (uint8_t*)datamap_json.c_str(), datamap_json.length(), ctx);
@@ -237,7 +247,8 @@ std::string putDataMap(shim_ctx_ptr_t ctx){
 
 // For development purposes only
 data_map_t getDataMap(shim_ctx_ptr_t ctx){
-    // check if datamap exists
+
+    // check whether datamap exists
     uint32_t datamap_bytes_len = 0;
     uint8_t datamap_bytes[MAX_VALUE_SIZE];
 

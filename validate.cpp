@@ -8,6 +8,14 @@
 
 #include "CR_functions.h"
 
+
+/*
+    This file contains simple validations that are being leveraged in the complex validation functions.
+    These validations are verbose and self-explanatory, as well as only being a showcase of the validation capabilities of FPC.
+*/
+
+
+
 template <typename T>
 bool isNotNull(const T* ptr) {
     return ptr != nullptr;
@@ -104,7 +112,6 @@ bool isValidId(const std::string& str){
 
 
 // CTX ACCESS
-
 bool tajExists(const std::string& taj, shim_ctx_ptr_t ctx){
 
     data_map_t the_datamap = getDataMap(ctx);

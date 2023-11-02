@@ -2,8 +2,7 @@
 #include "parson.h"
 
 /*
-    This file contains the data transfer objects for the chaincode.
-    As well as the marshalling and unmarshalling functions.
+   This file contains the marshalling and unmarshalling functions. For DTO-s
 */
 
 std::string marshal_person(person_t * person) {

@@ -3,9 +3,9 @@
 
 std::string personBorn(shim_ctx_ptr_t ctx, std::string id, std::string taj, std::string name, std::string birth_date) {
 
-   //Validate request
+   // Validate request
    if (!validPersonBorn(id, taj, name, birth_date, ctx)) {
-      return "ERROR: Invalid request";
+      return "ERROR";
    }
 
    // create new person
@@ -16,23 +16,28 @@ std::string personBorn(shim_ctx_ptr_t ctx, std::string id, std::string taj, std:
    new_person.birth_date = (char * ) birth_date.c_str();
    new_person.death_date = "";
 
+   // save person
    return putPerson(new_person, ctx);
 }
 
 std::string personDie(shim_ctx_ptr_t ctx, std::string id) {
 
+   // Validate request
    if (!validPersonDie(id, ctx)) {
-      return "ERROR: Person does not exist or already dead";
+      return "ERROR";
    }
    person_t the_person = getPerson((id).c_str(), ctx);
    the_person.death_date = "TODO";
+
+   // save person
    return putPerson(the_person, ctx);
 }
 
 std::string issueHealthExamination(shim_ctx_ptr_t ctx, std::string id, std::string taj, std::string examination_date, int systole, int diastole) {
 
+   // Validate request
    if (!validIssueHealthExamination(id, taj, examination_date, systole, diastole, ctx)) {
-      return "ERROR: Invalid request";
+      return "ERROR";
    }
 
    health_examination_t new_examination;
@@ -42,13 +47,15 @@ std::string issueHealthExamination(shim_ctx_ptr_t ctx, std::string id, std::stri
    new_examination.taj = (char * ) taj.c_str();
    new_examination.id = (char * ) id.c_str();
 
+   // save health examination
    return putHealthExamination(new_examination, ctx);
 }
 
 std::string issueLifeInsurance(shim_ctx_ptr_t ctx, std::string id, std::string taj, std::string from, std::string to, int cost, int payment, bool should_pay) {
 
+   // Validate request
    if (!validIssueLifeInsurance(id, taj, from, to, cost, payment, ctx)) {
-      return "ERROR: Invalid request";
+      return "ERROR";
    }
 
    life_insurance_t new_life_insurance;
@@ -60,13 +67,15 @@ std::string issueLifeInsurance(shim_ctx_ptr_t ctx, std::string id, std::string t
    new_life_insurance.payment = payment;
    new_life_insurance.should_pay = should_pay;
 
+   // save life insurance
    return putLifeInsurance(new_life_insurance, ctx);
 }
 
 std::string issueWorkPermit(shim_ctx_ptr_t ctx, std::string id, std::string name, std::string from, std::string issuer) {
 
+   // Validate request
    if (!validIssueWorkPermit(id, name, from, issuer, ctx)) {
-      return "ERROR: Person does not exist or is not eligible for work permit";
+      return "ERROR";
    }
 
    work_permit_t new_work_permit;
@@ -74,13 +83,15 @@ std::string issueWorkPermit(shim_ctx_ptr_t ctx, std::string id, std::string name
    new_work_permit.name = (char * ) name.c_str();
    new_work_permit.from = (char * ) from.c_str();
    new_work_permit.issuer = (char * ) issuer.c_str();
-
+   
+   // save work permit
    return putWorkPermit(new_work_permit, ctx);
 }
 
 std::string canWork(shim_ctx_ptr_t ctx, std::string id) {
+   // Validate request
    if (!validCanWork(id, ctx)) {
-      return "ERROR: Person does not exist";
+      return "ERROR";
    }
 
    if (hasWorkPermit(id, ctx)) {
@@ -89,6 +100,7 @@ std::string canWork(shim_ctx_ptr_t ctx, std::string id) {
    return "has no permit";
 }
 
+// Encrypts the input with the public found on the chain
 std::string onChainEncrypt(std::string input, shim_ctx_ptr_t ctx) {
 
    //Get parameters
@@ -110,7 +122,7 @@ std::string onChainEncrypt(std::string input, shim_ctx_ptr_t ctx) {
    get_public_state("y", y, sizeof(y), & y_len, ctx);
 
    if (g_len == 0 || g_hat_len == 0 || q_len == 0 || p_len == 0 || y_len == 0) {
-      return "ERROR: Encryption parameters not initialized";
+      return "ERROR";
    }
 
    BIGNUM * g_bn = BN_new();
