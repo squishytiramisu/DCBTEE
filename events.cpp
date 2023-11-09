@@ -5,7 +5,7 @@ std::string personBorn(shim_ctx_ptr_t ctx, std::string id, std::string taj, std:
 
    // Validate request
    if (!validPersonBorn(id, taj, name, birth_date, ctx)) {
-      return "ERROR";
+      return "Invalid request";
    }
 
    // create new person
@@ -24,7 +24,7 @@ std::string personDie(shim_ctx_ptr_t ctx, std::string id) {
 
    // Validate request
    if (!validPersonDie(id, ctx)) {
-      return "ERROR";
+      return "Invalid request";
    }
    person_t the_person = getPerson((id).c_str(), ctx);
    the_person.death_date = "TODO";
@@ -37,7 +37,7 @@ std::string issueHealthExamination(shim_ctx_ptr_t ctx, std::string id, std::stri
 
    // Validate request
    if (!validIssueHealthExamination(id, taj, examination_date, systole, diastole, ctx)) {
-      return "ERROR";
+      return "Invalid request";
    }
 
    health_examination_t new_examination;
@@ -55,7 +55,7 @@ std::string issueLifeInsurance(shim_ctx_ptr_t ctx, std::string id, std::string t
 
    // Validate request
    if (!validIssueLifeInsurance(id, taj, from, to, cost, payment, ctx)) {
-      return "ERROR";
+      return "Invalid request";
    }
 
    life_insurance_t new_life_insurance;
@@ -75,7 +75,7 @@ std::string issueWorkPermit(shim_ctx_ptr_t ctx, std::string id, std::string name
 
    // Validate request
    if (!validIssueWorkPermit(id, name, from, issuer, ctx)) {
-      return "ERROR";
+      return "Invalid request";
    }
 
    work_permit_t new_work_permit;
@@ -91,7 +91,7 @@ std::string issueWorkPermit(shim_ctx_ptr_t ctx, std::string id, std::string name
 std::string canWork(shim_ctx_ptr_t ctx, std::string id) {
    // Validate request
    if (!validCanWork(id, ctx)) {
-      return "ERROR";
+      return "Invalid request";
    }
 
    if (hasWorkPermit(id, ctx)) {
@@ -122,7 +122,7 @@ std::string onChainEncrypt(std::string input, shim_ctx_ptr_t ctx) {
    get_public_state("y", y, sizeof(y), & y_len, ctx);
 
    if (g_len == 0 || g_hat_len == 0 || q_len == 0 || p_len == 0 || y_len == 0) {
-      return "ERROR";
+      return "Invalid request";
    }
 
    BIGNUM * g_bn = BN_new();

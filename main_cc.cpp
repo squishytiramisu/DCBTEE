@@ -17,7 +17,7 @@ void prepareResult(std::string result, uint8_t* response, uint32_t max_response_
     if (max_response_len < neededSize)
     {
         *actual_response_len = 0;
-        result = "ERROR"; // Response buffer is too small
+        result = "Buffer too small"; // Response buffer is too small
     }
     memcpy(response, result.c_str(), neededSize);
     *actual_response_len = neededSize;
@@ -49,7 +49,7 @@ int invoke(
     // Access control validation
     if(!isAllowedToInvoke(function_name,tx_creator_name_msp_id, tx_creator_name_dn, signature, ctx)){
         LOG_DEBUG("DCBTEECC: Not allowed to invoke");
-        result = "ERROR";
+        result = "Not allowed to invoke";
         prepareResult(result, response, max_response_len, actual_response_len);
         return 0;
     }
@@ -65,7 +65,7 @@ int invoke(
     }else if(function_name == "PersonBorn"){
         if(params.size() != 4){
             LOG_DEBUG("personCC: PersonBorn: Wrong number of arguments");
-            result = "ERROR";
+            result = "Wrong number of arguments";
             prepareResult(result, response, max_response_len, actual_response_len);
             return 0;
         }
@@ -78,7 +78,7 @@ int invoke(
     }else if(function_name == "PersonDie"){
         if(params.size() != 1){
             LOG_DEBUG("personCC: PersonDie: Wrong number of arguments");
-            result = "ERROR";
+            result = "Wrong number of arguments";
             prepareResult(result, response, max_response_len, actual_response_len);
             return 0;
         }
@@ -87,7 +87,7 @@ int invoke(
 
     }else if(function_name == "IssueHealthExamination"){
         if(params.size() != 5){
-            result = "ERROR";
+            result = "Wrong number of arguments";
             prepareResult(result, response, max_response_len, actual_response_len);
             LOG_DEBUG("personCC: IssueHealthExamination: Wrong number of arguments");
             return 0;
@@ -102,7 +102,7 @@ int invoke(
     }else if(function_name == "IssueLifeInsurance"){
         if(params.size() != 6){
             LOG_DEBUG("personCC: IssueLifeInsurance: Wrong number of arguments");
-            result = "ERROR";
+            result = "Wrong number of arguments";
             prepareResult(result, response, max_response_len, actual_response_len);
             return 0;
         }
@@ -118,7 +118,7 @@ int invoke(
     }else if(function_name == "IssueWorkPermit"){
         if(params.size() != 4){
             LOG_DEBUG("personCC: IssueWorkPermit: Wrong number of arguments");
-            result = "ERROR";
+            result = "Wrong number of arguments";
             prepareResult(result, response, max_response_len, actual_response_len);
             return 0;
         }
@@ -132,7 +132,7 @@ int invoke(
     {
         if(params.size() != 1){
             LOG_DEBUG("personCC: hasWorkPermit: Wrong number of arguments");
-            result = "ERROR";
+            result = "Wrong number of arguments";
             prepareResult(result, response, max_response_len, actual_response_len);
             return 0;
         }
