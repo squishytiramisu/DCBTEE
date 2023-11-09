@@ -46,6 +46,12 @@ int invoke(
     std::string signature = params[params.size()-1];
     params.pop_back();
 
+    if(function_name == "initAccessControl"){
+        result = initAccessControl(params[0], ctx) ? "OK" : "ERROR";
+        prepareResult(result, response, max_response_len, actual_response_len);
+        return 0;
+    }
+
     // Access control validation
     if(!isAllowedToInvoke(function_name,tx_creator_name_msp_id, tx_creator_name_dn, signature, ctx)){
         LOG_DEBUG("DCBTEECC: Not allowed to invoke");
@@ -56,13 +62,7 @@ int invoke(
 
     /////////////// FUNCTION SWITCH ///////////////////////
     // Here we forward the request to the appropriate function
-
-    if(function_name == "initAccessControl"){
-        result = initAccessControl(params[0], ctx) ? "OK" : "ERROR";
-        prepareResult(result, response, max_response_len, actual_response_len);
-        return 0;
-
-    }else if(function_name == "PersonBorn"){
+    if(function_name == "PersonBorn"){
         if(params.size() != 4){
             LOG_DEBUG("personCC: PersonBorn: Wrong number of arguments");
             result = "Wrong number of arguments";
