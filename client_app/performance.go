@@ -132,6 +132,7 @@ func main() {
         contract.EvaluateTransaction(tx.Name, tx.Args...)
         end := time.Now()
         sum_time += end.Sub(start).Milliseconds()
+        logger.Infof("%v,%v", i,end.Sub(start).Milliseconds())
     }
 
     logger.Infof("Invoked %v hasWorkPermits", invoke_count)
